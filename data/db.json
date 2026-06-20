@@ -16,5 +16,52 @@
   ],
   "messages": [
     { "id": 1, "nom": "Jean Dupont", "email": "jean@example.com", "sujet": "Demande d'information", "message": "Bonjour, je souhaiterais connaître les modalités d'inscription à l'ordre pour un médecin étranger souhaitant exercer en Mauritanie.", "lu": false, "createdAt": "2026-06-19T08:00:00.000Z" }
-  ]
+  ],
+  "settings": {
+    "site_name_fr": "ONPS Mauritanie",
+    "site_name_ar": "ONPS موريتانيا",
+    "header_text_fr": "Ordre National des Professions de Santé de Mauritanie",
+    "header_text_ar": "المجلس الوطني للمهن الصحية في موريتانيا",
+    "footer_text_fr": "&copy; 2026 ONPS Mauritanie - Ordre National des Professions de Santé. Tous droits réservés.",
+    "footer_text_ar": "© 2026 ONPS موريتانيا - المجلس الوطني للمهن الصحية. جميع الحقوق محفوظة.",
+    "contact_address_fr": "Nouakchott - Mauritanie",
+    "contact_address_ar": "نواكشوط - موريتانيا",
+    "contact_phone": "+222 45 25 25 25",
+    "contact_email": "contact@onps.mr",
+    "contact_hours_fr": "Dim - Jeu : 08:00 - 16:00",
+    "contact_hours_ar": "الأحد - الخميس : 08:00 - 16:00",
+    "hero_title_fr": "Ordre National des <span>Professions de Santé</span> de Mauritanie",
+    "hero_title_ar": "المجلس الوطني لـ <span>المهن الصحية</span> في موريتانيا",
+    "hero_text_fr": "Garantir l'excellence, l'éthique et la transparence dans l'exercice des professions de santé en Mauritanie. L'ONPS veille à la qualification, à la déontologie et à la défense des intérêts de la profession et des patients.",
+    "hero_text_ar": "ضمان التميز والأخلاق والشفافية في ممارسة المهن الصحية في موريتانيا. يسهر المجلس على التأهيل والسلوك المهني والدفاع عن مصالح المهنة والمرضى.",
+    "logo_base64": "",
+    "logo_type": "",
+    "maintenance_mode": false,
+    "maintenance_message_fr": "Site en maintenance. Veuillez revenir plus tard.",
+    "maintenance_message_ar": "الموقع قيد الصيانة. يرجى العودة لاحقًا.",
+    "tabs_visibility": {
+      "accueil": true,
+      "apropos": true,
+      "annuaire": true,
+      "actualites": true,
+      "inscription": true,
+      "contact": true
+    },
+    "apropos_mission_title_fr": "Notre Mission",
+    "apropos_mission_title_ar": "مهمتنا",
+    "apropos_mission_text_fr": "Réguler et superviser l'exercice des professions de santé en Mauritanie, garantir la compétence et l'éthique des praticiens, et protéger la santé publique.",
+    "apropos_mission_text_ar": "تنظيم والإشراف على ممارسة المهن الصحية في موريتانيا، وضمان كفاءة وأخلاقيات الممارسين، وحماية الصحة العامة.",
+    "apropos_inscription_title_fr": "Inscription",
+    "apropos_inscription_title_ar": "التسجيل",
+    "apropos_inscription_text_fr": "Tout professionnel de santé exerçant en Mauritanie doit être inscrit à l'Ordre conformément à la réglementation en vigueur.",
+    "apropos_inscription_text_ar": "يجب على كل مهني صحي يمارس في موريتانيا التسجيل في النقابة وفقًا للأنظمة المعمول بها.",
+    "apropos_deonto_title_fr": "Déontologie",
+    "apropos_deonto_title_ar": "الأخلاقيات",
+    "apropos_deonto_text_fr": "Veiller au respect du code de déontologie médicale et des bonnes pratiques professionnelles pour garantir des soins de qualité aux citoyens.",
+    "apropos_deonto_text_ar": "السهر على احترام مدونة أخلاقيات المهنة الطبية والممارسات المهنية الجيدة لضمان رعاية صحية جيدة للمواطنين.",
+    "apropos_couverture_title_fr": "Couverture Nationale",
+    "apropos_couverture_title_ar": "التغطية الوطنية",
+    "apropos_couverture_text_fr": "Présent dans toutes les wilayas de Mauritanie, de Nouakchott à Zouérate, pour encadrer les professionnels de santé sur tout le territoire.",
+    "apropos_couverture_text_ar": "موجود في جميع ولايات موريتانيا، من نواكشوط إلى الزويرات، لتأطير المهنيين الصحيين في جميع أنحاء البلاد."
+  }
 }

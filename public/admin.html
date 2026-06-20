@@ -23,6 +23,8 @@
       <a href="#" onclick="showTab('inscriptions')" data-tab="inscriptions">&#x1F4DD; Demandes d'inscription</a>
       <a href="#" onclick="showTab('messages')" data-tab="messages">&#x2709; Messages</a>
       <a href="#" onclick="showTab('annuaire')" data-tab="annuaire">&#x1F4CB; Annuaire</a>
+      <a href="#" onclick="showTab('parametres')" data-tab="parametres">&#x2699; Paramètres</a>
+      <a href="#" onclick="showTab('maintenance')" data-tab="maintenance">&#x1F6A7; Maintenance</a>
     </nav>
     <div style="padding:20px;border-top:1px solid #2a3a4a;margin-top:auto;">
       <p style="font-size:12px;color:#5a6a7a;margin-bottom:10px;" id="userInfo"></p>
@@ -68,6 +70,8 @@ function showTab(name) {
     case 'inscriptions': loadInscriptions(); break;
     case 'messages': loadMessages(); break;
     case 'annuaire': loadAnnuaireAdmin(); break;
+    case 'parametres': loadParametres(); break;
+    case 'maintenance': loadMaintenance(); break;
   }
 }
 
@@ -201,6 +205,237 @@ async function loadAnnuaireAdmin() {
     const d = await r.json();
     document.getElementById('annuaireAdminBody').innerHTML = d.membres.map(m => `<tr><td>${m.name}</td><td>${m.profession}</td><td>${m.specialite||'-'}</td><td>${m.numero_ordre}</td><td>${m.email}</td><td>${m.telephone}</td></tr>`).join('');
   } catch(e) {}
+}
+
+// Parametres
+async function loadParametres() {
+  const mc = document.getElementById('mainContent');
+  mc.innerHTML = `<div class="page-header"><h2>Paramètres du site</h2></div>
+    <div id="paramForm" style="max-width:800px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+        <div class="form-group"><label>Nom du site (FR)</label><input class="form-input" id="p_site_name_fr"></div>
+        <div class="form-group"><label>Nom du site (AR)</label><input class="form-input" id="p_site_name_ar"></div>
+      </div>
+      <h3 style="margin:20px 0 10px;color:#2ecc71;">Logo</h3>
+      <div style="display:flex;gap:15px;align-items:center;flex-wrap:wrap;">
+        <div id="logoPreview" style="width:80px;height:80px;background:#1a2a3a;border-radius:50%;border:2px dashed #2a3a4a;display:flex;align-items:center;justify-content:center;overflow:hidden;">&#x2695;</div>
+        <input type="file" id="logoInput" accept="image/*" style="color:#a0b4c8;">
+        <button class="btn btn-sm btn-danger" onclick="removeLogo()">Supprimer logo</button>
+      </div>
+      <h3 style="margin:20px 0 10px;color:#2ecc71;">En-tête (Hero)</h3>
+      <div class="form-group"><label>Titre hero (FR)</label><textarea class="form-input" id="p_hero_title_fr" rows="2"></textarea></div>
+      <div class="form-group"><label>Titre hero (AR)</label><textarea class="form-input" id="p_hero_title_ar" rows="2"></textarea></div>
+      <div class="form-group"><label>Texte hero (FR)</label><textarea class="form-input" id="p_hero_text_fr" rows="3"></textarea></div>
+      <div class="form-group"><label>Texte hero (AR)</label><textarea class="form-input" id="p_hero_text_ar" rows="3"></textarea></div>
+      <h3 style="margin:20px 0 10px;color:#2ecc71;">À propos - Mission</h3>
+      <div class="form-group"><label>Titre mission (FR)</label><input class="form-input" id="p_apropos_mission_title_fr"></div>
+      <div class="form-group"><label>Titre mission (AR)</label><input class="form-input" id="p_apropos_mission_title_ar"></div>
+      <div class="form-group"><label>Texte mission (FR)</label><textarea class="form-input" id="p_apropos_mission_text_fr" rows="3"></textarea></div>
+      <div class="form-group"><label>Texte mission (AR)</label><textarea class="form-input" id="p_apropos_mission_text_ar" rows="3"></textarea></div>
+      <h3 style="margin:20px 0 10px;color:#2ecc71;">À propos - Inscription</h3>
+      <div class="form-group"><label>Titre inscription (FR)</label><input class="form-input" id="p_apropos_inscription_title_fr"></div>
+      <div class="form-group"><label>Titre inscription (AR)</label><input class="form-input" id="p_apropos_inscription_title_ar"></div>
+      <div class="form-group"><label>Texte inscription (FR)</label><textarea class="form-input" id="p_apropos_inscription_text_fr" rows="3"></textarea></div>
+      <div class="form-group"><label>Texte inscription (AR)</label><textarea class="form-input" id="p_apropos_inscription_text_ar" rows="3"></textarea></div>
+      <h3 style="margin:20px 0 10px;color:#2ecc71;">À propos - Déontologie</h3>
+      <div class="form-group"><label>Titre déontologie (FR)</label><input class="form-input" id="p_apropos_deonto_title_fr"></div>
+      <div class="form-group"><label>Titre déontologie (AR)</label><input class="form-input" id="p_apropos_deonto_title_ar"></div>
+      <div class="form-group"><label>Texte déontologie (FR)</label><textarea class="form-input" id="p_apropos_deonto_text_fr" rows="3"></textarea></div>
+      <div class="form-group"><label>Texte déontologie (AR)</label><textarea class="form-input" id="p_apropos_deonto_text_ar" rows="3"></textarea></div>
+      <h3 style="margin:20px 0 10px;color:#2ecc71;">À propos - Couverture Nationale</h3>
+      <div class="form-group"><label>Titre couverture (FR)</label><input class="form-input" id="p_apropos_couverture_title_fr"></div>
+      <div class="form-group"><label>Titre couverture (AR)</label><input class="form-input" id="p_apropos_couverture_title_ar"></div>
+      <div class="form-group"><label>Texte couverture (FR)</label><textarea class="form-input" id="p_apropos_couverture_text_fr" rows="3"></textarea></div>
+      <div class="form-group"><label>Texte couverture (AR)</label><textarea class="form-input" id="p_apropos_couverture_text_ar" rows="3"></textarea></div>
+      <h3 style="margin:20px 0 10px;color:#2ecc71;">Contact</h3>
+      <div class="form-group"><label>Adresse (FR)</label><input class="form-input" id="p_contact_address_fr"></div>
+      <div class="form-group"><label>Adresse (AR)</label><input class="form-input" id="p_contact_address_ar"></div>
+      <div class="form-group"><label>Téléphone</label><input class="form-input" id="p_contact_phone"></div>
+      <div class="form-group"><label>Email</label><input class="form-input" id="p_contact_email"></div>
+      <div class="form-group"><label>Horaires (FR)</label><input class="form-input" id="p_contact_hours_fr"></div>
+      <div class="form-group"><label>Horaires (AR)</label><input class="form-input" id="p_contact_hours_ar"></div>
+      <h3 style="margin:20px 0 10px;color:#2ecc71;">Pied de page (Footer)</h3>
+      <div class="form-group"><label>Texte footer (FR)</label><textarea class="form-input" id="p_footer_text_fr" rows="2"></textarea></div>
+      <div class="form-group"><label>Texte footer (AR)</label><textarea class="form-input" id="p_footer_text_ar" rows="2"></textarea></div>
+      <button class="btn btn-primary" onclick="saveParametres()" style="margin-top:20px;">Enregistrer les paramètres</button>
+    </div>`;
+
+  try {
+    const r = await fetch('/api/settings');
+    const d = await r.json();
+    const s = d.settings || {};
+    document.getElementById('p_site_name_fr').value = s.site_name_fr || '';
+    document.getElementById('p_site_name_ar').value = s.site_name_ar || '';
+    document.getElementById('p_hero_title_fr').value = s.hero_title_fr || '';
+    document.getElementById('p_hero_title_ar').value = s.hero_title_ar || '';
+    document.getElementById('p_hero_text_fr').value = s.hero_text_fr || '';
+    document.getElementById('p_hero_text_ar').value = s.hero_text_ar || '';
+    document.getElementById('p_apropos_mission_title_fr').value = s.apropos_mission_title_fr || '';
+    document.getElementById('p_apropos_mission_title_ar').value = s.apropos_mission_title_ar || '';
+    document.getElementById('p_apropos_mission_text_fr').value = s.apropos_mission_text_fr || '';
+    document.getElementById('p_apropos_mission_text_ar').value = s.apropos_mission_text_ar || '';
+    document.getElementById('p_apropos_inscription_title_fr').value = s.apropos_inscription_title_fr || '';
+    document.getElementById('p_apropos_inscription_title_ar').value = s.apropos_inscription_title_ar || '';
+    document.getElementById('p_apropos_inscription_text_fr').value = s.apropos_inscription_text_fr || '';
+    document.getElementById('p_apropos_inscription_text_ar').value = s.apropos_inscription_text_ar || '';
+    document.getElementById('p_apropos_deonto_title_fr').value = s.apropos_deonto_title_fr || '';
+    document.getElementById('p_apropos_deonto_title_ar').value = s.apropos_deonto_title_ar || '';
+    document.getElementById('p_apropos_deonto_text_fr').value = s.apropos_deonto_text_fr || '';
+    document.getElementById('p_apropos_deonto_text_ar').value = s.apropos_deonto_text_ar || '';
+    document.getElementById('p_apropos_couverture_title_fr').value = s.apropos_couverture_title_fr || '';
+    document.getElementById('p_apropos_couverture_title_ar').value = s.apropos_couverture_title_ar || '';
+    document.getElementById('p_apropos_couverture_text_fr').value = s.apropos_couverture_text_fr || '';
+    document.getElementById('p_apropos_couverture_text_ar').value = s.apropos_couverture_text_ar || '';
+    document.getElementById('p_contact_address_fr').value = s.contact_address_fr || '';
+    document.getElementById('p_contact_address_ar').value = s.contact_address_ar || '';
+    document.getElementById('p_contact_phone').value = s.contact_phone || '';
+    document.getElementById('p_contact_email').value = s.contact_email || '';
+    document.getElementById('p_contact_hours_fr').value = s.contact_hours_fr || '';
+    document.getElementById('p_contact_hours_ar').value = s.contact_hours_ar || '';
+    document.getElementById('p_footer_text_fr').value = s.footer_text_fr || '';
+    document.getElementById('p_footer_text_ar').value = s.footer_text_ar || '';
+    if (s.logo_base64) {
+      document.getElementById('logoPreview').innerHTML = '<img src="' + s.logo_base64 + '" style="width:80px;height:80px;border-radius:50%;object-fit:cover;">';
+    }
+  } catch(e) { showToast('Erreur chargement paramètres', 'error'); }
+
+  document.getElementById('logoInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      document.getElementById('logoPreview').innerHTML = '<img src="' + ev.target.result + '" style="width:80px;height:80px;border-radius:50%;object-fit:cover;">';
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function saveParametres() {
+  const data = {
+    site_name_fr: document.getElementById('p_site_name_fr').value,
+    site_name_ar: document.getElementById('p_site_name_ar').value,
+    hero_title_fr: document.getElementById('p_hero_title_fr').value,
+    hero_title_ar: document.getElementById('p_hero_title_ar').value,
+    hero_text_fr: document.getElementById('p_hero_text_fr').value,
+    hero_text_ar: document.getElementById('p_hero_text_ar').value,
+    apropos_mission_title_fr: document.getElementById('p_apropos_mission_title_fr').value,
+    apropos_mission_title_ar: document.getElementById('p_apropos_mission_title_ar').value,
+    apropos_mission_text_fr: document.getElementById('p_apropos_mission_text_fr').value,
+    apropos_mission_text_ar: document.getElementById('p_apropos_mission_text_ar').value,
+    apropos_inscription_title_fr: document.getElementById('p_apropos_inscription_title_fr').value,
+    apropos_inscription_title_ar: document.getElementById('p_apropos_inscription_title_ar').value,
+    apropos_inscription_text_fr: document.getElementById('p_apropos_inscription_text_fr').value,
+    apropos_inscription_text_ar: document.getElementById('p_apropos_inscription_text_ar').value,
+    apropos_deonto_title_fr: document.getElementById('p_apropos_deonto_title_fr').value,
+    apropos_deonto_title_ar: document.getElementById('p_apropos_deonto_title_ar').value,
+    apropos_deonto_text_fr: document.getElementById('p_apropos_deonto_text_fr').value,
+    apropos_deonto_text_ar: document.getElementById('p_apropos_deonto_text_ar').value,
+    apropos_couverture_title_fr: document.getElementById('p_apropos_couverture_title_fr').value,
+    apropos_couverture_title_ar: document.getElementById('p_apropos_couverture_title_ar').value,
+    apropos_couverture_text_fr: document.getElementById('p_apropos_couverture_text_fr').value,
+    apropos_couverture_text_ar: document.getElementById('p_apropos_couverture_text_ar').value,
+    contact_address_fr: document.getElementById('p_contact_address_fr').value,
+    contact_address_ar: document.getElementById('p_contact_address_ar').value,
+    contact_phone: document.getElementById('p_contact_phone').value,
+    contact_email: document.getElementById('p_contact_email').value,
+    contact_hours_fr: document.getElementById('p_contact_hours_fr').value,
+    contact_hours_ar: document.getElementById('p_contact_hours_ar').value,
+    footer_text_fr: document.getElementById('p_footer_text_fr').value,
+    footer_text_ar: document.getElementById('p_footer_text_ar').value
+  };
+
+  // Encode logo
+  const logoImg = document.querySelector('#logoPreview img');
+  if (logoImg) {
+    data.logo_base64 = logoImg.src;
+    data.logo_type = 'image';
+  }
+
+  try {
+    const r = await fetch('/api/settings', { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) });
+    if (!r.ok) throw Error();
+    showToast('Paramètres enregistrés !', 'success');
+  } catch(e) { showToast('Erreur', 'error'); }
+}
+
+function removeLogo() {
+  document.getElementById('logoPreview').innerHTML = '\u2695';
+  // Don't clear it yet, just remove preview
+}
+
+// Maintenance
+async function loadMaintenance() {
+  const mc = document.getElementById('mainContent');
+  mc.innerHTML = `<div class="page-header"><h2>Mode Maintenance</h2></div>
+    <div style="max-width:600px;">
+      <div class="card" style="margin-bottom:20px;">
+        <h3 id="maintenanceStatus" style="margin-bottom:15px;">Chargement...</h3>
+        <button class="btn btn-primary" id="maintenanceToggleBtn" onclick="toggleMaintenance()">Activer/Désactiver</button>
+      </div>
+      <h3 style="margin:20px 0 10px;color:#2ecc71;">Message de maintenance</h3>
+      <div class="form-group"><label>Message (FR)</label><textarea class="form-input" id="maint_msg_fr" rows="2">Site en maintenance. Veuillez revenir plus tard.</textarea></div>
+      <div class="form-group"><label>Message (AR)</label><textarea class="form-input" id="maint_msg_ar" rows="2">الموقع قيد الصيانة. يرجى العودة لاحقًا.</textarea></div>
+      <button class="btn btn-primary" onclick="saveMaintenanceMsg()" style="margin-top:10px;">Enregistrer message</button>
+    </div>
+    <h3 style="margin:30px 0 15px;color:#2ecc71;">Visibilité des onglets</h3>
+    <p style="color:#a0b4c8;margin-bottom:15px;">Activez ou désactivez les sections visibles sur le site public.</p>
+    <div id="tabsToggle"></div>`;
+
+  try {
+    const r = await fetch('/api/settings');
+    const d = await r.json();
+    const s = d.settings || {};
+    const isOn = s.maintenance_mode;
+    const statusEl = document.getElementById('maintenanceStatus');
+    statusEl.innerHTML = isOn ? '&#x1F6A7; Maintenance <span class="badge badge-danger">ACTIVÉE</span>' : '&#x2705; Site en ligne <span class="badge badge-success">NORMAL</span>';
+    document.getElementById('maintenanceToggleBtn').textContent = isOn ? 'Désactiver la maintenance' : 'Activer la maintenance';
+    document.getElementById('maint_msg_fr').value = s.maintenance_message_fr || 'Site en maintenance. Veuillez revenir plus tard.';
+    document.getElementById('maint_msg_ar').value = s.maintenance_message_ar || 'الموقع قيد الصيانة. يرجى العودة لاحقًا.';
+
+    // Tabs visibility
+    const tabs = { accueil:'Accueil', apropos:'À propos', annuaire:'Annuaire', actualites:'Actualités', inscription:'Inscription', contact:'Contact' };
+    const vis = s.tabs_visibility || {};
+    const tabsDiv = document.getElementById('tabsToggle');
+    tabsDiv.innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;">' +
+      Object.entries(tabs).map(([key, label]) => `
+        <div class="card" style="display:flex;align-items:center;justify-content:space-between;padding:15px 20px;cursor:pointer;" onclick="toggleTab('${key}')">
+          <span>${label}</span>
+          <span class="badge ${vis[key] !== false ? 'badge-success' : 'badge-danger'}" id="tabBadge_${key}">${vis[key] !== false ? 'Visible' : 'Masqué'}</span>
+        </div>`).join('') + '</div>';
+  } catch(e) { showToast('Erreur', 'error'); }
+}
+
+async function toggleMaintenance() {
+  const statusEl = document.getElementById('maintenanceStatus');
+  const isOn = statusEl.innerHTML.includes('ACTIVÉE');
+  try {
+    const r = await fetch('/api/settings/maintenance', { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ maintenance_mode: !isOn }) });
+    if (!r.ok) throw Error();
+    showToast(isOn ? 'Maintenance désactivée' : 'Maintenance activée', 'success');
+    loadMaintenance();
+  } catch(e) { showToast('Erreur', 'error'); }
+}
+
+async function saveMaintenanceMsg() {
+  try {
+    const r = await fetch('/api/settings/maintenance', { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({
+      maintenance_message_fr: document.getElementById('maint_msg_fr').value,
+      maintenance_message_ar: document.getElementById('maint_msg_ar').value
+    }) });
+    if (!r.ok) throw Error();
+    showToast('Message enregistré', 'success');
+  } catch(e) { showToast('Erreur', 'error'); }
+}
+
+async function toggleTab(tabKey) {
+  const badge = document.getElementById('tabBadge_' + tabKey);
+  const isVis = badge.textContent === 'Visible';
+  try {
+    const r = await fetch('/api/settings/tabs', { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ [tabKey]: !isVis }) });
+    if (!r.ok) throw Error();
+    showToast('Onglet ' + (isVis ? 'masqué' : 'visible'), 'success');
+    loadMaintenance();
+  } catch(e) { showToast('Erreur', 'error'); }
 }
 
 // Init

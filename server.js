@@ -15,7 +15,7 @@ if (isVercel && !fs.existsSync(DATA_DIR)) {
   if (fs.existsSync(seed)) fs.copyFileSync(seed, DB_PATH);
 }
 
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: '1d' }));
 app.use(session({
@@ -164,6 +164,84 @@ app.get('/api/member/data', requireAuth('member'), (req, res) => {
   const membre = db.users.find(u => u.id === req.session.user.id);
   const actualites = db.actualites.filter(a => a.statut === 'publie');
   res.json({ membre: { ...membre, password: undefined }, actualites });
+});
+
+// ---- SETTINGS ----
+app.get('/api/settings', requireAuth('admin'), (req, res) => {
+  const db = readDB();
+  res.json({ settings: db.settings || {} });
+});
+
+app.put('/api/settings', requireAuth('admin'), (req, res) => {
+  const db = readDB();
+  if (!db.settings) db.settings = {};
+  Object.assign(db.settings, req.body);
+  writeDB(db);
+  res.json({ settings: db.settings });
+});
+
+app.put('/api/settings/tabs', requireAuth('admin'), (req, res) => {
+  const db = readDB();
+  if (!db.settings) db.settings = {};
+  if (!db.settings.tabs_visibility) db.settings.tabs_visibility = {};
+  Object.assign(db.settings.tabs_visibility, req.body);
+  writeDB(db);
+  res.json({ tabs_visibility: db.settings.tabs_visibility });
+});
+
+app.put('/api/settings/maintenance', requireAuth('admin'), (req, res) => {
+  const db = readDB();
+  if (!db.settings) db.settings = {};
+  db.settings.maintenance_mode = req.body.maintenance_mode;
+  if (req.body.maintenance_message_fr) db.settings.maintenance_message_fr = req.body.maintenance_message_fr;
+  if (req.body.maintenance_message_ar) db.settings.maintenance_message_ar = req.body.maintenance_message_ar;
+  writeDB(db);
+  res.json({ maintenance_mode: db.settings.maintenance_mode });
+});
+
+app.get('/api/settings/public', (req, res) => {
+  const db = readDB();
+  const s = db.settings || {};
+  res.json({
+    maintenance_mode: s.maintenance_mode || false,
+    maintenance_message_fr: s.maintenance_message_fr || '',
+    maintenance_message_ar: s.maintenance_message_ar || '',
+    tabs_visibility: s.tabs_visibility || {},
+    site_name_fr: s.site_name_fr || '',
+    site_name_ar: s.site_name_ar || '',
+    header_text_fr: s.header_text_fr || '',
+    header_text_ar: s.header_text_ar || '',
+    footer_text_fr: s.footer_text_fr || '',
+    footer_text_ar: s.footer_text_ar || '',
+    contact_address_fr: s.contact_address_fr || '',
+    contact_address_ar: s.contact_address_ar || '',
+    contact_phone: s.contact_phone || '',
+    contact_email: s.contact_email || '',
+    contact_hours_fr: s.contact_hours_fr || '',
+    contact_hours_ar: s.contact_hours_ar || '',
+    hero_title_fr: s.hero_title_fr || '',
+    hero_title_ar: s.hero_title_ar || '',
+    hero_text_fr: s.hero_text_fr || '',
+    hero_text_ar: s.hero_text_ar || '',
+    logo_base64: s.logo_base64 || '',
+    logo_type: s.logo_type || '',
+    apropos_mission_title_fr: s.apropos_mission_title_fr || '',
+    apropos_mission_title_ar: s.apropos_mission_title_ar || '',
+    apropos_mission_text_fr: s.apropos_mission_text_fr || '',
+    apropos_mission_text_ar: s.apropos_mission_text_ar || '',
+    apropos_inscription_title_fr: s.apropos_inscription_title_fr || '',
+    apropos_inscription_title_ar: s.apropos_inscription_title_ar || '',
+    apropos_inscription_text_fr: s.apropos_inscription_text_fr || '',
+    apropos_inscription_text_ar: s.apropos_inscription_text_ar || '',
+    apropos_deonto_title_fr: s.apropos_deonto_title_fr || '',
+    apropos_deonto_title_ar: s.apropos_deonto_title_ar || '',
+    apropos_deonto_text_fr: s.apropos_deonto_text_fr || '',
+    apropos_deonto_text_ar: s.apropos_deonto_text_ar || '',
+    apropos_couverture_title_fr: s.apropos_couverture_title_fr || '',
+    apropos_couverture_title_ar: s.apropos_couverture_title_ar || '',
+    apropos_couverture_text_fr: s.apropos_couverture_text_fr || '',
+    apropos_couverture_text_ar: s.apropos_couverture_text_ar || ''
+  });
 });
 
 module.exports = app;
