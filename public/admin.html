@@ -25,6 +25,7 @@
       <a href="#" onclick="showTab('annuaire')" data-tab="annuaire">&#x1F4CB; Annuaire</a>
       <a href="#" onclick="showTab('parametres')" data-tab="parametres">&#x2699; Paramètres</a>
       <a href="#" onclick="showTab('maintenance')" data-tab="maintenance">&#x1F6A7; Maintenance</a>
+      <a href="#" onclick="showTab('visiteurs')" data-tab="visiteurs">&#x1F464; Visiteurs</a>
     </nav>
     <div style="padding:20px;border-top:1px solid #2a3a4a;margin-top:auto;">
       <p style="font-size:12px;color:#5a6a7a;margin-bottom:10px;" id="userInfo"></p>
@@ -72,6 +73,7 @@ function showTab(name) {
     case 'annuaire': loadAnnuaireAdmin(); break;
     case 'parametres': loadParametres(); break;
     case 'maintenance': loadMaintenance(); break;
+    case 'visiteurs': loadVisiteurs(); break;
   }
 }
 
@@ -436,6 +438,61 @@ async function toggleTab(tabKey) {
     showToast('Onglet ' + (isVis ? 'masqué' : 'visible'), 'success');
     loadMaintenance();
   } catch(e) { showToast('Erreur', 'error'); }
+}
+
+// Visiteurs
+async function loadVisiteurs() {
+  const mc = document.getElementById('mainContent');
+  mc.innerHTML = `<div class="page-header"><h2>Gestion des visiteurs</h2><button class="btn btn-primary" onclick="showVisiteurModal()">+ Nouveau visiteur</button></div>
+    <p style="color:#a0b4c8;margin-bottom:15px;">Créez des comptes visiteurs pour permettre l'accès au portail ONPS.</p>
+    <div style="overflow-x:auto;"><table><thead><tr><th>Nom</th><th>Nom d'utilisateur</th><th>Mot de passe</th><th>Date création</th><th>Statut</th><th>Actions</th></tr></thead><tbody id="visiteursBody"></tbody></table></div>
+    <div class="modal" id="visiteurModal"><div class="modal-content"><h3>Nouveau visiteur</h3><form class="modal-form" id="visiteurForm">
+      <input type="text" class="form-input" name="name" placeholder="Nom complet" required>
+      <input type="text" class="form-input" name="username" placeholder="Nom d'utilisateur" required>
+      <input type="text" class="form-input" name="password" placeholder="Mot de passe" required>
+      <button type="submit" class="btn btn-primary">Créer le visiteur</button>
+      <button type="button" class="btn btn-outline" onclick="document.getElementById('visiteurModal').classList.remove('active')">Annuler</button>
+    </form></div></div>`;
+
+  try {
+    const r = await fetch('/api/visiteurs');
+    const d = await r.json();
+    const tbody = document.getElementById('visiteursBody');
+    tbody.innerHTML = d.visiteurs.map(v => `<tr>
+      <td>${v.name}</td><td>${v.username}</td>
+      <td><span style="color:#5a6a7a;">••••••••</span> <button class="btn btn-sm btn-outline" onclick="resetVisiteurPass(${v.id})">Réinit.</button></td>
+      <td>${v.createdAt ? new Date(v.createdAt).toLocaleDateString() : '-'}</td>
+      <td><span class="badge ${v.actif ? 'badge-success' : 'badge-danger'}">${v.actif ? 'Actif' : 'Désactivé'}</span></td>
+      <td>
+        <button class="btn btn-sm ${v.actif ? 'btn-outline' : 'btn-primary'}" onclick="toggleVisiteur(${v.id}, ${!v.actif})">${v.actif ? 'Désactiver' : 'Activer'}</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteVisiteur(${v.id})">Suppr.</button>
+      </td>
+    </tr>`).join('');
+  } catch(e) { showToast('Erreur chargement', 'error'); }
+
+  document.getElementById('visiteurForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const data = Object.fromEntries(fd);
+    try {
+      const r = await fetch('/api/visiteurs', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) });
+      if (!r.ok) { const ed = await r.json(); showToast(ed.error||'Erreur', 'error'); return; }
+      showToast('Visiteur créé', 'success'); document.getElementById('visiteurModal').classList.remove('active'); loadVisiteurs();
+    } catch(e) { showToast('Erreur', 'error'); }
+  });
+}
+function showVisiteurModal() { document.getElementById('visiteurModal').classList.add('active'); }
+async function toggleVisiteur(id, actif) {
+  try { await fetch('/api/visiteurs/'+id, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({actif}) }); showToast('Statut modifié', 'success'); loadVisiteurs(); } catch(e) {}
+}
+async function resetVisiteurPass(id) {
+  const pass = prompt('Nouveau mot de passe :');
+  if (!pass) return;
+  try { await fetch('/api/visiteurs/'+id, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({password: pass}) }); showToast('Mot de passe réinitialisé', 'success'); } catch(e) {}
+}
+async function deleteVisiteur(id) {
+  if (!confirm('Supprimer ce visiteur ?')) return;
+  try { await fetch('/api/visiteurs/'+id, { method:'DELETE' }); showToast('Supprimé', 'success'); loadVisiteurs(); } catch(e) {}
 }
 
 // Init

@@ -42,7 +42,10 @@ app.post('/api/login', (req, res) => {
   const db = readDB();
   const user = db.users.find(u => u.username === username && u.password === password);
   if (!user) return res.status(401).json({ error: 'Identifiants incorrects' });
-  req.session.user = { id: user.id, username: user.username, role: user.role, name: user.name, statut: user.statut };
+  if (user.role === 'visitor') {
+    if (!user.actif) return res.status(403).json({ error: 'Compte désactivé par l\'administrateur' });
+  }
+  req.session.user = { id: user.id, username: user.username, role: user.role, name: user.name, statut: user.statut || 'actif' };
   res.json({ user: req.session.user });
 });
 app.post('/api/logout', (req, res) => { req.session.destroy(() => res.json({ success: true })); });
@@ -114,6 +117,38 @@ app.delete('/api/membres/:id', requireAuth('admin'), (req, res) => {
   writeDB(db); res.json({ success: true });
 });
 
+// ---- VISITEURS (admin) ----
+app.get('/api/visiteurs', requireAuth('admin'), (req, res) => {
+  const db = readDB();
+  res.json({ visiteurs: db.users.filter(u => u.role === 'visitor').map(u => ({ ...u, password: undefined })) });
+});
+app.post('/api/visiteurs', requireAuth('admin'), (req, res) => {
+  const db = readDB();
+  if (db.users.find(u => u.username === req.body.username)) return res.status(400).json({ error: 'Nom d\'utilisateur déjà pris' });
+  const v = { id: Date.now(), username: req.body.username, password: req.body.password || 'visiteur123', role: 'visitor', name: req.body.name || req.body.username, actif: true, createdAt: new Date().toISOString() };
+  db.users.push(v); writeDB(db); res.json({ visiteur: { ...v, password: undefined } });
+});
+app.put('/api/visiteurs/:id', requireAuth('admin'), (req, res) => {
+  const db = readDB(); const idx = db.users.findIndex(u => u.id == req.params.id && u.role === 'visitor');
+  if (idx===-1) return res.status(404).json({ error: 'Non trouvé' });
+  if (req.body.password) db.users[idx].password = req.body.password;
+  if (req.body.name) db.users[idx].name = req.body.name;
+  if (req.body.actif !== undefined) db.users[idx].actif = req.body.actif;
+  writeDB(db); res.json({ visiteur: { ...db.users[idx], password: undefined } });
+});
+app.delete('/api/visiteurs/:id', requireAuth('admin'), (req, res) => {
+  const db = readDB(); db.users = db.users.filter(u => !(u.id == req.params.id && u.role === 'visitor'));
+  writeDB(db); res.json({ success: true });
+});
+app.get('/api/visiteur/data', requireAuth('visitor'), (req, res) => {
+  const db = readDB();
+  const visiteur = db.users.find(u => u.id === req.session.user.id);
+  const actualites = db.actualites.filter(a => a.statut === 'publie').sort((a,b) => new Date(b.date) - new Date(a.date));
+  const membres = db.users.filter(u => u.role === 'member' && u.statut === 'valide').map(m => ({ name: m.name, profession: m.profession, specialite: m.specialite, numero_ordre: m.numero_ordre }));
+  const s = db.settings || {};
+  res.json({ visiteur: { ...visiteur, password: undefined }, actualites, membres, settings: s });
+});
+
 // ---- INSCRIPTIONS (admin) ----
 app.get('/api/inscriptions', requireAuth('admin'), (req, res) => {
   const db = readDB(); res.json({ inscriptions: db.inscriptions });
@@ -155,7 +190,7 @@ app.get('/api/annuaire', (req, res) => {
 // ---- STATS ----
 app.get('/api/stats', requireAuth('admin'), (req, res) => {
   const db = readDB();
-  res.json({ totalMembres: db.users.filter(u => u.role==='member').length, membresValides: db.users.filter(u => u.role==='member'&&u.statut==='valide').length, membresEnAttente: db.users.filter(u => u.role==='member'&&u.statut==='en_attente').length, totalActualites: db.actualites.length, totalInscriptions: db.inscriptions.length, inscriptionsEnAttente: db.inscriptions.filter(i => i.statut==='en_attente').length, messagesNonLus: db.messages.filter(m => !m.lu).length });
+  res.json({ totalMembres: db.users.filter(u => u.role==='member').length, membresValides: db.users.filter(u => u.role==='member'&&u.statut==='valide').length, membresEnAttente: db.users.filter(u => u.role==='member'&&u.statut==='en_attente').length, totalActualites: db.actualites.length, totalInscriptions: db.inscriptions.length, inscriptionsEnAttente: db.inscriptions.filter(i => i.statut==='en_attente').length, messagesNonLus: db.messages.filter(m => !m.lu).length, totalVisiteurs: db.users.filter(u => u.role==='visitor').length });
 });
 
 // ---- MEMBER DATA ----

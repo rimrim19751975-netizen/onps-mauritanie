@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Espace Visiteur - ONPS Mauritanie</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="toast" class="toast"></div>
+<div class="dashboard">
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo">
+        <div class="logo-icon">&#x2695;</div>
+        <div class="logo-text">ONPS <span>Visiteur</span></div>
+      </div>
+    </div>
+    <nav>
+      <a href="#" onclick="showTab('accueil')" class="active" data-tab="accueil">&#x1F3E0; Accueil</a>
+      <a href="#" onclick="showTab('actualites')" data-tab="actualites">&#x1F4F0; Actualités</a>
+      <a href="#" onclick="showTab('annuaire')" data-tab="annuaire">&#x1F4CB; Annuaire</a>
+      <a href="#" onclick="showTab('apropos')" data-tab="apropos">&#x2139; À propos</a>
+      <a href="#" onclick="showTab('contact')" data-tab="contact">&#x2709; Contact</a>
+    </nav>
+    <div style="padding:20px;border-top:1px solid #2a3a4a;">
+      <p style="font-size:12px;color:#5a6a7a;margin-bottom:10px;" id="userInfo"></p>
+      <button onclick="logout()" class="btn btn-danger btn-sm" style="width:100%;">Déconnexion</button>
+    </div>
+  </div>
+  <div class="main-content" id="mainContent"></div>
+</div>
+<script>
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast ' + type; t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 4000);
+}
+async function checkAuth() {
+  try {
+    const r = await fetch('/api/me');
+    if (!r.ok) { window.location.href = '/login.html'; return null; }
+    const d = await r.json();
+    if (d.user.role === 'admin') { window.location.href = '/admin.html'; return null; }
+    if (d.user.role === 'member') { window.location.href = '/membre.html'; return null; }
+    document.getElementById('userInfo').textContent = d.user.name + ' (Visiteur)';
+    return d.user;
+  } catch(e) { window.location.href = '/login.html'; return null; }
+}
+async function logout() {
+  await fetch('/api/logout', { method:'POST' });
+  window.location.href = '/login.html';
+}
+function showTab(name) {
+  document.querySelectorAll('.sidebar nav a').forEach(a => a.classList.remove('active'));
+  document.querySelector(`[data-tab="${name}"]`).classList.add('active');
+  switch(name) {
+    case 'accueil': loadAccueil(); break;
+    case 'actualites': loadActualites(); break;
+    case 'annuaire': loadAnnuaire(); break;
+    case 'apropos': loadApropos(); break;
+    case 'contact': loadContact(); break;
+  }
+}
+
+// Cached data
+let cache = null;
+
+async function getData() {
+  if (cache) return cache;
+  const r = await fetch('/api/visiteur/data');
+  cache = await r.json();
+  return cache;
+}
+
+async function loadAccueil() {
+  const mc = document.getElementById('mainContent');
+  mc.innerHTML = '<h2>Bienvenue</h2><div id="accueilContent" style="margin-top:20px;"></div>';
+  try {
+    const d = await getData();
+    const s = d.settings || {};
+    mc.innerHTML = `
+      <div style="text-align:center;padding:40px 0;">
+        <div style="width:80px;height:80px;background:#2ecc71;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:36px;color:#0f1923;">&#x2695;</div>
+        <h2 style="font-size:32px;margin-bottom:10px;">${s.hero_title_fr || 'Bienvenue sur le portail ONPS'}</h2>
+        <p style="color:#a0b4c8;max-width:600px;margin:0 auto;line-height:1.8;">${s.hero_text_fr || 'Accédez aux actualités, à l\'annuaire des professionnels et aux informations de l\'Ordre National des Professions de Santé de Mauritanie.'}</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-top:20px;">
+        <div class="card" style="cursor:pointer;" onclick="showTab('actualites')">
+          <div class="card-icon">&#x1F4F0;</div>
+          <h3>Actualités</h3>
+          <p>Consultez les dernières nouvelles de l\'Ordre</p>
+        </div>
+        <div class="card" style="cursor:pointer;" onclick="showTab('annuaire')">
+          <div class="card-icon">&#x1F4CB;</div>
+          <h3>Annuaire</h3>
+          <p>Recherchez un professionnel de santé</p>
+        </div>
+        <div class="card" style="cursor:pointer;" onclick="showTab('apropos')">
+          <div class="card-icon">&#x2139;</div>
+          <h3>À propos</h3>
+          <p>Découvrez l\'ONPS et ses missions</p>
+        </div>
+        <div class="card" style="cursor:pointer;" onclick="showTab('contact')">
+          <div class="card-icon">&#x2709;</div>
+          <h3>Contact</h3>
+          <p>Contactez l\'Ordre National des Professions de Santé</p>
+        </div>
+      </div>`;
+  } catch(e) { mc.innerHTML += '<p>Erreur de chargement</p>'; }
+}
+
+async function loadActualites() {
+  const mc = document.getElementById('mainContent');
+  mc.innerHTML = '<h2>Actualités</h2><div id="actuList" style="margin-top:20px;"></div>';
+  try {
+    const d = await getData();
+    document.getElementById('actuList').innerHTML = d.actualites.length
+      ? d.actualites.map(a => `<div class="actu-card"><h3>${a.titre_fr}</h3><div class="date">${a.date}</div><p>${a.contenu_fr}</p></div>`).join('')
+      : '<p style="color:#5a6a7a;">Aucune actualité pour le moment.</p>';
+  } catch(e) {}
+}
+
+async function loadAnnuaire() {
+  const mc = document.getElementById('mainContent');
+  mc.innerHTML = '<h2>Annuaire des professionnels</h2><div style="margin-top:20px;overflow-x:auto;"><table><thead><tr><th>Nom</th><th>Profession</th><th>Spécialité</th><th>N° Ordre</th></tr></thead><tbody id="annuaireBody"></tbody></table></div>';
+  try {
+    const d = await getData();
+    document.getElementById('annuaireBody').innerHTML = d.membres.length
+      ? d.membres.map(m => `<tr><td>${m.name}</td><td>${m.profession||'-'}</td><td>${m.specialite||'-'}</td><td>${m.numero_ordre||'-'}</td></tr>`).join('')
+      : '<tr><td colspan="4" style="text-align:center;color:#5a6a7a;">Aucun professionnel inscrit</td></tr>';
+  } catch(e) {}
+}
+
+async function loadApropos() {
+  const mc = document.getElementById('mainContent');
+  mc.innerHTML = '<h2>À propos de l\'ONPS</h2><div style="margin-top:20px;"><div class="cards-grid" id="aproposCards"></div></div>';
+  try {
+    const d = await getData();
+    const s = d.settings || {};
+    const cards = [
+      { icon:'&#x1F3DB;', title: s.apropos_mission_title_fr || 'Notre Mission', text: s.apropos_mission_text_fr || 'Réguler et superviser l\'exercice des professions de santé.' },
+      { icon:'&#x1F4C4;', title: s.apropos_inscription_title_fr || 'Inscription', text: s.apropos_inscription_text_fr || 'Tout professionnel doit être inscrit à l\'Ordre.' },
+      { icon:'&#x2696;', title: s.apropos_deonto_title_fr || 'Déontologie', text: s.apropos_deonto_text_fr || 'Veiller au respect du code de déontologie médicale.' },
+      { icon:'&#x1F30D;', title: s.apropos_couverture_title_fr || 'Couverture Nationale', text: s.apropos_couverture_text_fr || 'Présent dans toutes les wilayas de Mauritanie.' }
+    ];
+    document.getElementById('aproposCards').innerHTML = cards.map(c => `
+      <div class="card"><div class="card-icon">${c.icon}</div><h3>${c.title}</h3><p>${c.text}</p></div>
+    `).join('');
+  } catch(e) {}
+}
+
+async function loadContact() {
+  const mc = document.getElementById('mainContent');
+  mc.innerHTML = '<h2>Contact</h2><div style="margin-top:20px;"><div class="contact-grid"><div><div class="contact-info" id="contactInfo"></div></div></div></div>';
+  try {
+    const d = await getData();
+    const s = d.settings || {};
+    document.getElementById('contactInfo').innerHTML = `
+      <h3 style="margin-bottom:20px;color:#2ecc71;">Nos coordonnées</h3>
+      <p>&#x1F4CD; ${s.contact_address_fr || 'Nouakchott - Mauritanie'}</p>
+      <p>&#x1F4DE; ${s.contact_phone || '+222 45 25 25 25'}</p>
+      <p>&#x2709; ${s.contact_email || 'contact@onps.mr'}</p>
+      <p>&#x1F552; ${s.contact_hours_fr || 'Dim - Jeu : 08:00 - 16:00'}</p>
+    `;
+  } catch(e) {}
+}
+
+checkAuth().then(user => { if (user) loadAccueil(); });
+</script>
+</body>
+</html>
