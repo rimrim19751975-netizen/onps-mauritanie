@@ -1,6 +1,9 @@
 const path = require('path');
 const fs = require('fs');
 
+// Load .env.local for local development
+try { const envPath = path.join(__dirname, '.env.local'); if (fs.existsSync(envPath)) { for (const line of fs.readFileSync(envPath, 'utf-8').split('\n').filter(l => l.trim() && !l.startsWith('#'))) { const [k, ...v] = line.split('='); if (k && v.length) process.env[k.trim()] = v.join('=').trim(); } } } catch(e) {}
+
 const TURSO_URL = process.env.TURSO_DATABASE_URL;
 const TURSO_TOKEN = process.env.TURSO_AUTH_TOKEN;
 const isVercel = !!process.env.VERCEL;
