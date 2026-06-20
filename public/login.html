@@ -11,24 +11,33 @@
 <div class="login-page">
   <div class="login-box">
     <div class="logo" style="justify-content:center;margin-bottom:20px;">
-      <div class="logo-icon">&#x2695;</div>
+      <div class="logo-icon" style="cursor:pointer;" onclick="window.location.href='/'">&#x2695;</div>
       <div class="logo-text">ONPS <span>Mauritanie</span></div>
     </div>
     <h1 data-fr="Connexion" data-ar="تسجيل الدخول">Connexion</h1>
-    <p data-fr="Accédez à votre espace membre" data-ar="الوصول إلى مساحة العضو الخاصة بك">Accédez à votre espace membre</p>
+    <p data-fr="Accédez à votre espace" data-ar="الوصول إلى مساحتك الخاصة">Accédez à votre espace</p>
+    <button onclick="toggleLang()" style="background:none;border:1px solid #2a3a4a;color:#a0b4c8;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:13px;width:100%;margin-bottom:15px;">&#127760; <span id="langLabel">AR</span></button>
     <form class="login-form" id="loginForm">
-      <input type="text" class="form-input" name="username" placeholder="Nom d'utilisateur" required>
-      <input type="password" class="form-input" name="password" placeholder="Mot de passe" required>
+      <input type="text" class="form-input" name="username" data-fr-ph="Nom d'utilisateur" data-ar-ph="اسم المستخدم" placeholder="Nom d'utilisateur" required>
+      <input type="password" class="form-input" name="password" data-fr-ph="Mot de passe" data-ar-ph="كلمة المرور" placeholder="Mot de passe" required>
       <button type="submit" class="btn btn-primary" style="width:100%;" data-fr="Se connecter" data-ar="تسجيل الدخول">Se connecter</button>
     </form>
     <p style="margin-top:15px;text-align:center;font-size:13px;color:#5a6a7a;">
-      <span data-fr="Mot de passe oublié ?" data-ar="هل نسيت كلمة المرور؟">Mot de passe oublié ?</span>
-      <span style="margin:0 10px">|</span>
       <a href="/" data-fr="Retour au site" data-ar="العودة إلى الموقع">Retour au site</a>
     </p>
   </div>
 </div>
 <script>
+let lang = 'fr';
+function toggleLang() {
+  lang = lang === 'fr' ? 'ar' : 'fr';
+  document.getElementById('langLabel').textContent = lang === 'fr' ? 'AR' : 'FR';
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  document.querySelectorAll('[data-fr]').forEach(el => { el.innerHTML = lang === 'fr' ? el.dataset.fr : el.dataset.ar; });
+  document.querySelectorAll('[data-fr-ph]').forEach(el => { el.placeholder = lang === 'fr' ? el.dataset.frPh : el.dataset.arPh; });
+  document.title = lang === 'fr' ? 'Connexion - ONPS Mauritanie' : 'تسجيل الدخول - ONPS موريتانيا';
+}
 function showToast(msg, type) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.className = 'toast ' + type; t.style.display = 'block';

@@ -17,18 +17,20 @@
       </div>
     </div>
     <nav>
-      <a href="#" onclick="showTab('dashboard')" class="active" data-tab="dashboard">&#x1F4CA; Tableau de bord</a>
-      <a href="#" onclick="showTab('membres')" data-tab="membres">&#x1F465; Membres</a>
-      <a href="#" onclick="showTab('actualites')" data-tab="actualites">&#x1F4F0; Actualités</a>
-      <a href="#" onclick="showTab('inscriptions')" data-tab="inscriptions">&#x1F4DD; Demandes d'inscription</a>
-      <a href="#" onclick="showTab('messages')" data-tab="messages">&#x2709; Messages</a>
-      <a href="#" onclick="showTab('annuaire')" data-tab="annuaire">&#x1F4CB; Annuaire</a>
-      <a href="#" onclick="showTab('parametres')" data-tab="parametres">&#x2699; Paramètres</a>
-      <a href="#" onclick="showTab('maintenance')" data-tab="maintenance">&#x1F6A7; Maintenance</a>
-      <a href="#" onclick="showTab('visiteurs')" data-tab="visiteurs">&#x1F464; Visiteurs</a>
+      <a href="#" onclick="showTab('dashboard')" class="active" data-tab="dashboard" data-fr="&#x1F4CA; Tableau de bord" data-ar="&#x1F4CA; لوحة القيادة">&#x1F4CA; Tableau de bord</a>
+      <a href="#" onclick="showTab('membres')" data-tab="membres" data-fr="&#x1F465; Membres" data-ar="&#x1F465; الأعضاء">&#x1F465; Membres</a>
+      <a href="#" onclick="showTab('actualites')" data-tab="actualites" data-fr="&#x1F4F0; Actualités" data-ar="&#x1F4F0; الأخبار">&#x1F4F0; Actualités</a>
+      <a href="#" onclick="showTab('inscriptions')" data-tab="inscriptions" data-fr="&#x1F4DD; Demandes d'inscription" data-ar="&#x1F4DD; طلبات التسجيل">&#x1F4DD; Demandes d'inscription</a>
+      <a href="#" onclick="showTab('messages')" data-tab="messages" data-fr="&#x2709; Messages" data-ar="&#x2709; الرسائل">&#x2709; Messages</a>
+      <a href="#" onclick="showTab('annuaire')" data-tab="annuaire" data-fr="&#x1F4CB; Annuaire" data-ar="&#x1F4CB; الدليل">&#x1F4CB; Annuaire</a>
+      <a href="#" onclick="showTab('parametres')" data-tab="parametres" data-fr="&#x2699; Paramètres" data-ar="&#x2699; الإعدادات">&#x2699; Paramètres</a>
+      <a href="#" onclick="showTab('modules')" data-tab="modules" data-fr="&#x1F4D6; Modules" data-ar="&#x1F4D6; الوحدات">&#x1F4D6; Modules</a>
+      <a href="#" onclick="showTab('maintenance')" data-tab="maintenance" data-fr="&#x1F6A7; Maintenance" data-ar="&#x1F6A7; الصيانة">&#x1F6A7; Maintenance</a>
+      <a href="#" onclick="showTab('visiteurs')" data-tab="visiteurs" data-fr="&#x1F464; Visiteurs" data-ar="&#x1F464; الزوار">&#x1F464; Visiteurs</a>
     </nav>
     <div style="padding:20px;border-top:1px solid #2a3a4a;margin-top:auto;">
       <p style="font-size:12px;color:#5a6a7a;margin-bottom:10px;" id="userInfo"></p>
+      <button onclick="toggleLangAdmin()" style="background:none;border:1px solid #2a3a4a;color:#a0b4c8;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:13px;width:100%;margin-bottom:8px;">&#127760; <span id="langLabelAdmin">AR</span></button>
       <button onclick="logout()" class="btn btn-danger btn-sm" style="width:100%;">Déconnexion</button>
     </div>
   </div>
@@ -38,7 +40,15 @@
 </div>
 
 <script>
-let currentLang = 'fr';
+let adminLang = 'fr';
+function toggleLangAdmin() {
+  adminLang = adminLang === 'fr' ? 'ar' : 'fr';
+  document.getElementById('langLabelAdmin').textContent = adminLang === 'fr' ? 'AR' : 'FR';
+  document.documentElement.dir = adminLang === 'ar' ? 'rtl' : 'ltr';
+  document.querySelectorAll('[data-fr]').forEach(el => {
+    el.innerHTML = adminLang === 'fr' ? el.dataset.fr : el.dataset.ar;
+  });
+}
 function showToast(msg, type) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.className = 'toast ' + type; t.style.display = 'block';
@@ -72,6 +82,7 @@ function showTab(name) {
     case 'messages': loadMessages(); break;
     case 'annuaire': loadAnnuaireAdmin(); break;
     case 'parametres': loadParametres(); break;
+    case 'modules': loadModules(); break;
     case 'maintenance': loadMaintenance(); break;
     case 'visiteurs': loadVisiteurs(); break;
   }
@@ -437,6 +448,112 @@ async function toggleTab(tabKey) {
     if (!r.ok) throw Error();
     showToast('Onglet ' + (isVis ? 'masqué' : 'visible'), 'success');
     loadMaintenance();
+  } catch(e) { showToast('Erreur', 'error'); }
+}
+
+// Modules
+async function loadModules() {
+  const mc = document.getElementById('mainContent');
+  mc.innerHTML = `<div class="page-header"><h2>Contenu des modules</h2></div>
+    <p style="color:#a0b4c8;margin-bottom:20px;">Modifiez les textes de tous les modules du site (FR/AR).</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:25px;">
+      <button class="btn btn-primary btn-sm" onclick="document.querySelectorAll('.module-section').forEach(e=>e.style.display='none');document.getElementById('ms-accueil').style.display='block'">Accueil</button>
+      <button class="btn btn-primary btn-sm" onclick="document.querySelectorAll('.module-section').forEach(e=>e.style.display='none');document.getElementById('ms-apropos').style.display='block'">À propos</button>
+      <button class="btn btn-primary btn-sm" onclick="document.querySelectorAll('.module-section').forEach(e=>e.style.display='none');document.getElementById('ms-annuaire').style.display='block'">Annuaire</button>
+      <button class="btn btn-primary btn-sm" onclick="document.querySelectorAll('.module-section').forEach(e=>e.style.display='none');document.getElementById('ms-actualites').style.display='block'">Actualités</button>
+      <button class="btn btn-primary btn-sm" onclick="document.querySelectorAll('.module-section').forEach(e=>e.style.display='none');document.getElementById('ms-inscription').style.display='block'">Inscription</button>
+      <button class="btn btn-primary btn-sm" onclick="document.querySelectorAll('.module-section').forEach(e=>e.style.display='none');document.getElementById('ms-contact').style.display='block'">Contact</button>
+    </div>
+    <div id="modulesContainer" style="max-width:800px;"></div>
+    <button class="btn btn-primary" onclick="saveModules()" style="margin-top:20px;">Enregistrer tous les modules</button>`;
+
+  try {
+    const r = await fetch('/api/settings');
+    const d = await r.json();
+    const s = d.settings || {};
+
+    const fields = [
+      { id:'ms-accueil', title:'Accueil', items:[
+        { id:'hero_title', label:'Titre hero', fr:s.hero_title_fr||'', ar:s.hero_title_ar||'' },
+        { id:'hero_text', label:'Texte hero', fr:s.hero_text_fr||'', ar:s.hero_text_ar||'', area:true }
+      ]},
+      { id:'ms-apropos', title:'À propos', items:[
+        { id:'apropos_mission_title', label:'Mission - Titre', fr:s.apropos_mission_title_fr||'', ar:s.apropos_mission_title_ar||'' },
+        { id:'apropos_mission_text', label:'Mission - Texte', fr:s.apropos_mission_text_fr||'', ar:s.apropos_mission_text_ar||'', area:true },
+        { id:'apropos_inscription_title', label:'Inscription - Titre', fr:s.apropos_inscription_title_fr||'', ar:s.apropos_inscription_title_ar||'' },
+        { id:'apropos_inscription_text', label:'Inscription - Texte', fr:s.apropos_inscription_text_fr||'', ar:s.apropos_inscription_text_ar||'', area:true },
+        { id:'apropos_deonto_title', label:'Déontologie - Titre', fr:s.apropos_deonto_title_fr||'', ar:s.apropos_deonto_title_ar||'' },
+        { id:'apropos_deonto_text', label:'Déontologie - Texte', fr:s.apropos_deonto_text_fr||'', ar:s.apropos_deonto_text_ar||'', area:true },
+        { id:'apropos_couverture_title', label:'Couverture - Titre', fr:s.apropos_couverture_title_fr||'', ar:s.apropos_couverture_title_ar||'' },
+        { id:'apropos_couverture_text', label:'Couverture - Texte', fr:s.apropos_couverture_text_fr||'', ar:s.apropos_couverture_text_ar||'', area:true }
+      ]},
+      { id:'ms-annuaire', title:'Annuaire', items:[
+        { id:'annuaire_title', label:'Titre section', fr:"Annuaire des Professionnels", ar:"دليل المهنيين" },
+        { id:'annuaire_subtitle', label:'Sous-titre', fr:"Recherchez un professionnel de santé inscrit à l'Ordre", ar:"ابحث عن مهني صحي مسجل في النقابة" }
+      ]},
+      { id:'ms-actualites', title:'Actualités', items:[
+        { id:'actualites_title', label:'Titre section', fr:"Actualités de l'Ordre", ar:"أخبار النقابة" },
+        { id:'actualites_subtitle', label:'Sous-titre', fr:"Les dernières nouvelles de l'Ordre National des Professions de Santé", ar:"آخر أخبار المجلس الوطني للمهن الصحية" }
+      ]},
+      { id:'ms-inscription', title:'Inscription', items:[
+        { id:'inscription_title', label:'Titre section', fr:"Inscription à l'Ordre", ar:"التسجيل في النقابة" },
+        { id:'inscription_subtitle', label:'Sous-titre', fr:"Remplissez ce formulaire pour demander votre inscription", ar:"املأ هذا النموذج لطلب التسجيل" }
+      ]},
+      { id:'ms-contact', title:'Contact', items:[
+        { id:'contact_address_fr', label:'Adresse (FR)', fr:s.contact_address_fr||'Nouakchott - Mauritanie', ar:s.contact_address_ar||'نواكشوط - موريتانيا' },
+        { id:'contact_address_ar', label:'Adresse (AR)', fr:'', ar:'' },
+        { id:'contact_phone', label:'Téléphone', fr:s.contact_phone||'+222 45 25 25 25', ar:s.contact_phone||'+222 45 25 25 25' },
+        { id:'contact_email', label:'Email', fr:s.contact_email||'contact@onps.mr', ar:s.contact_email||'contact@onps.mr' },
+        { id:'contact_hours_fr', label:'Horaires (FR)', fr:s.contact_hours_fr||'Dim - Jeu : 08:00 - 16:00', ar:s.contact_hours_ar||'الأحد - الخميس : 08:00 - 16:00' },
+        { id:'contact_hours_ar', label:'Horaires (AR)', fr:'', ar:'' }
+      ]}
+    ];
+
+    // Also load annuaire/actualites/inscription from settings or use defaults
+    const saved = { ...s, annuaire_title: s.annuaire_title || "Annuaire des Professionnels", annuaire_subtitle: s.annuaire_subtitle || "Recherchez un professionnel de santé inscrit à l'Ordre", annuaire_title_ar: s.annuaire_title_ar || "دليل المهنيين", annuaire_subtitle_ar: s.annuaire_subtitle_ar || "ابحث عن مهني صحي مسجل في النقابة", actualites_title: s.actualites_title || "Actualités de l'Ordre", actualites_subtitle: s.actualites_subtitle || "Les dernières nouvelles", actualites_title_ar: s.actualites_title_ar || "أخبار النقابة", actualites_subtitle_ar: s.actualites_subtitle_ar || "آخر الأخبار", inscription_title: s.inscription_title || "Inscription à l'Ordre", inscription_subtitle: s.inscription_subtitle || "Remplissez ce formulaire", inscription_title_ar: s.inscription_title_ar || "التسجيل في النقابة", inscription_subtitle_ar: s.inscription_subtitle_ar || "املأ هذا النموذج" };
+
+    let html = '';
+    for (const section of fields) {
+      let sectionHtml = `<div class="module-section" id="${section.id}" style="display:none;background:#1a2a3a;border-radius:12px;padding:25px;border:1px solid #2a3a4a;margin-bottom:15px;">
+        <h3 style="color:#2ecc71;margin-bottom:15px;">${section.title}</h3>`;
+      for (const item of section.items) {
+        if (item.id === 'contact_address_ar' || item.id === 'contact_hours_ar') continue;
+        const frVal = saved[item.id+'_fr'] || saved[item.id] || item.fr;
+        const arVal = saved[item.id+'_ar'] || item.ar;
+        const tag = item.area ? 'textarea' : 'input';
+        const areaAttrs = item.area ? 'rows="3"' : '';
+        const inputAttrs = item.area ? '' : 'type="text"';
+        sectionHtml += `<div style="margin-bottom:12px;"><label style="color:#a0b4c8;font-size:13px;display:block;margin-bottom:3px;">${item.label} (FR)</label><${tag} class="form-input" ${inputAttrs} ${areaAttrs} id="mod_${item.id}_fr" value="${frVal.replace(/"/g,'&quot;')}">${item.area ? frVal : ''}</${tag}></div>`;
+        sectionHtml += `<div style="margin-bottom:12px;"><label style="color:#a0b4c8;font-size:13px;display:block;margin-bottom:3px;">${item.label} (AR)</label><${tag} class="form-input" ${inputAttrs} ${areaAttrs} id="mod_${item.id}_ar" value="${arVal.replace(/"/g,'&quot;')}">${item.area ? arVal : ''}</${tag}></div>`;
+      }
+      sectionHtml += '</div>';
+      html += sectionHtml;
+    }
+
+    document.getElementById('modulesContainer').innerHTML = html;
+    // Show first section
+    document.querySelector('.module-section').style.display = 'block';
+  } catch(e) { showToast('Erreur chargement modules', 'error'); }
+}
+
+async function saveModules() {
+  const data = {};
+  const prefixes = ['hero_title','hero_text','apropos_mission_title','apropos_mission_text','apropos_inscription_title','apropos_inscription_text','apropos_deonto_title','apropos_deonto_text','apropos_couverture_title','apropos_couverture_text','annuaire_title','annuaire_subtitle','actualites_title','actualites_subtitle','inscription_title','inscription_subtitle','contact_address','contact_phone','contact_email','contact_hours'];
+  for (const p of prefixes) {
+    const frEl = document.getElementById(`mod_${p}_fr`);
+    const arEl = document.getElementById(`mod_${p}_ar`);
+    if (frEl) data[`${p}_fr`] = frEl.value || frEl.textContent;
+    if (arEl) data[`${p}_ar`] = arEl.value || arEl.textContent;
+  }
+  // Contact specific
+  const phoneEl = document.getElementById('mod_contact_phone_fr');
+  const emailEl = document.getElementById('mod_contact_email_fr');
+  if (phoneEl) data.contact_phone = phoneEl.value;
+  if (emailEl) data.contact_email = emailEl.value;
+
+  try {
+    await fetch('/api/settings', { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) });
+    showToast('Modules enregistrés !', 'success');
   } catch(e) { showToast('Erreur', 'error'); }
 }
 
