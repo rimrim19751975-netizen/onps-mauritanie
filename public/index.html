@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ONPS Mauritanie - Ordre National des Professions de Santé</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="toast" class="toast"></div>
+
+<header>
+  <div class="container">
+    <div class="logo" id="logo">
+      <div class="logo-icon">&#x2695;</div>
+      <div class="logo-text">ONPS <span>Mauritanie</span></div>
+    </div>
+    <nav>
+      <a href="#accueil" class="active" data-fr="Accueil" data-ar="الرئيسية">Accueil</a>
+      <a href="#apropos" data-fr="À propos" data-ar="عن النقابة">À propos</a>
+      <a href="#annuaire" data-fr="Annuaire" data-ar="الدليل">Annuaire</a>
+      <a href="#actualites" data-fr="Actualités" data-ar="الأخبار">Actualités</a>
+      <a href="#inscription" data-fr="Inscription" data-ar="التسجيل">Inscription</a>
+      <a href="#contact" data-fr="Contact" data-ar="اتصل بنا">Contact</a>
+      <a href="login.html" class="btn btn-primary btn-sm" data-fr="Connexion" data-ar="تسجيل الدخول">Connexion</a>
+    </nav>
+    <button onclick="toggleLang()" style="background:none;border:1px solid #2a3a4a;color:#a0b4c8;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:13px;">&#127760; FR</button>
+  </div>
+</header>
+
+<section class="hero" id="accueil">
+  <h1 data-fr="Ordre National des <span>Professions de Santé</span> de Mauritanie" data-ar="المجلس الوطني لـ <span>المهن الصحية</span> في موريتانيا">Ordre National des <span>Professions de Santé</span> de Mauritanie</h1>
+  <p data-fr="Garantir l'excellence, l'éthique et la transparence dans l'exercice des professions de santé en Mauritanie. L'ONPS veille à la qualification, à la déontologie et à la défense des intérêts de la profession et des patients." data-ar="ضمان التميز والأخلاق والشفافية في ممارسة المهن الصحية في موريتانيا. يسهر المجلس على التأهيل والسلوك المهني والدفاع عن مصالح المهنة والمرضى.">Garantir l'excellence, l'éthique et la transparence dans l'exercice des professions de santé en Mauritanie.</p>
+  <div class="hero-btns">
+    <a href="#inscription" class="btn btn-primary" data-fr="S'inscrire à l'Ordre" data-ar="التسجيل في النقابة">S'inscrire à l'Ordre</a>
+    <a href="#annuaire" class="btn btn-outline" data-fr="Consulter l'annuaire" data-ar="تصفح الدليل">Consulter l'annuaire</a>
+  </div>
+</section>
+
+<section class="section stats">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item"><h2 id="statMembres">0</h2><p data-fr="Membres inscrits" data-ar="الأعضاء المسجلين">Membres inscrits</p></div>
+      <div class="stat-item"><h2 id="statProfessions">3</h2><p data-fr="Professions représentées" data-ar="المهن الممثلة">Professions représentées</p></div>
+      <div class="stat-item"><h2 id="statActualites">0</h2><p data-fr="Actualités" data-ar="الأخبار">Actualités</p></div>
+      <div class="stat-item"><h2 id="statWilayas">15</h2><p data-fr="Wilayas couvertes" data-ar="الولايات المغطاة">Wilayas couvertes</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="apropos">
+  <div class="container">
+    <h2 class="section-title" data-fr="<span>À propos</span> de l'ONPS" data-ar="<span>عن</span> المجلس"><span>À propos</span> de l'ONPS</h2>
+    <p class="section-subtitle" data-fr="Notre mission, notre vision, nos valeurs" data-ar="مهمتنا، رؤيتنا، قيمنا">Notre mission, notre vision, nos valeurs</p>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-icon">&#x1F3DB;</div>
+        <h3 data-fr="Notre Mission" data-ar="مهمتنا">Notre Mission</h3>
+        <p data-fr="Réguler et superviser l'exercice des professions de santé en Mauritanie, garantir la compétence et l'éthique des praticiens, et protéger la santé publique." data-ar="تنظيم والإشراف على ممارسة المهن الصحية في موريتانيا، وضمان كفاءة وأخلاقيات الممارسين، وحماية الصحة العامة.">Réguler et superviser l'exercice des professions de santé, garantir la compétence et l'éthique des praticiens.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">&#x1F4C4;</div>
+        <h3 data-fr="Inscription" data-ar="التسجيل">Inscription</h3>
+        <p data-fr="Tout professionnel de santé exerçant en Mauritanie doit être inscrit à l'Ordre conformément à la réglementation en vigueur." data-ar="يجب على كل مهني صحي يمارس في موريتانيا التسجيل في النقابة وفقًا للأنظمة المعمول بها.">Tout professionnel de santé exerçant en Mauritanie doit être inscrit à l'Ordre.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">&#x2696;</div>
+        <h3 data-fr="Déontologie" data-ar="الأخلاقيات">Déontologie</h3>
+        <p data-fr="Veiller au respect du code de déontologie médicale et des bonnes pratiques professionnelles pour garantir des soins de qualité aux citoyens." data-ar="السهر على احترام مدونة أخلاقيات المهنة الطبية والممارسات المهنية الجيدة لضمان رعاية صحية جيدة للمواطنين.">Veiller au respect du code de déontologie et des bonnes pratiques professionnelles.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">&#x1F30D;</div>
+        <h3 data-fr="Couverture Nationale" data-ar="التغطية الوطنية">Couverture Nationale</h3>
+        <p data-fr="Présent dans toutes les wilayas de Mauritanie, de Nouakchott à Zouérate, pour encadrer les professionnels de santé sur tout le territoire." data-ar="موجود في جميع ولايات موريتانيا، من نواكشوط إلى الزويرات، لتأطير المهنيين الصحيين في جميع أنحاء البلاد.">Présent dans toutes les wilayas de Mauritanie pour encadrer les professionnels de santé.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="annuaire" style="background:#0a1628;">
+  <div class="container">
+    <h2 class="section-title" data-fr="<span>Annuaire</span> des Professionnels" data-ar="<span>دليل</span> المهنيين"><span>Annuaire</span> des Professionnels</h2>
+    <p class="section-subtitle" data-fr="Recherchez un professionnel de santé inscrit à l'Ordre" data-ar="ابحث عن مهني صحي مسجل في النقابة">Recherchez un professionnel de santé inscrit à l'Ordre</p>
+    <div class="search-bar">
+      <input type="text" class="form-input" id="searchNom" placeholder="Rechercher par nom..." data-fr-ph="Rechercher par nom..." data-ar-ph="البحث بالاسم...">
+      <select class="form-input" id="searchProfession">
+        <option value="" data-fr="Toutes professions" data-ar="جميع المهن">Toutes professions</option>
+        <option value="Médecin">Médecin</option>
+        <option value="Pharmacien">Pharmacien</option>
+        <option value="Infirmier">Infirmier</option>
+        <option value="Chirurgien-dentiste">Chirurgien-dentiste</option>
+        <option value="Sage-femme">Sage-femme</option>
+      </select>
+      <input type="text" class="form-input" id="searchSpecialite" placeholder="Spécialité..." data-fr-ph="Spécialité..." data-ar-ph="التخصص...">
+      <button class="btn btn-primary" onclick="searchAnnuaire()" data-fr="Rechercher" data-ar="بحث">Rechercher</button>
+    </div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead><tr><th data-fr="Nom" data-ar="الاسم">Nom</th><th data-fr="Profession" data-ar="المهنة">Profession</th><th data-fr="Spécialité" data-ar="التخصص">Spécialité</th><th data-fr="N° Ordre" data-ar="رقم النقابة">N° Ordre</th><th data-fr="Email" data-ar="البريد الإلكتروني">Email</th><th data-fr="Téléphone" data-ar="الهاتف">Téléphone</th></tr></thead>
+        <tbody id="annuaireBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="actualites">
+  <div class="container">
+    <h2 class="section-title" data-fr="<span>Actualités</span> de l'Ordre" data-ar="<span>أخبار</span> النقابة"><span>Actualités</span> de l'Ordre</h2>
+    <div id="actualitesList"></div>
+  </div>
+</section>
+
+<section class="section" id="inscription" style="background:#0a1628;">
+  <div class="container">
+    <h2 class="section-title" data-fr="<span>Inscription</span> à l'Ordre" data-ar="<span>التسجيل</span> في النقابة"><span>Inscription</span> à l'Ordre</h2>
+    <p class="section-subtitle" data-fr="Remplissez ce formulaire pour demander votre inscription à l'Ordre National des Professions de Santé" data-ar="املأ هذا النموذج لطلب التسجيل في المجلس الوطني للمهن الصحية">Remplissez ce formulaire pour demander votre inscription à l'Ordre</p>
+    <div style="max-width:600px;margin:0 auto;">
+      <form class="contact-form" id="inscriptionForm">
+        <div class="form-group">
+          <label data-fr="Nom complet" data-ar="الاسم الكامل">Nom complet</label>
+          <input type="text" class="form-input" name="nom" required data-fr-ph="Votre nom complet" data-ar-ph="اسمك الكامل">
+        </div>
+        <div class="form-group">
+          <label data-fr="Email" data-ar="البريد الإلكتروني">Email</label>
+          <input type="email" class="form-input" name="email" required>
+        </div>
+        <div class="form-group">
+          <label data-fr="Téléphone" data-ar="الهاتف">Téléphone</label>
+          <input type="tel" class="form-input" name="telephone" required placeholder="+222 XX XX XX XX">
+        </div>
+        <div class="form-group">
+          <label data-fr="Profession" data-ar="المهنة">Profession</label>
+          <select class="form-input" name="profession" required>
+            <option value="Médecin">Médecin</option>
+            <option value="Pharmacien">Pharmacien</option>
+            <option value="Infirmier">Infirmier</option>
+            <option value="Chirurgien-dentiste">Chirurgien-dentiste</option>
+            <option value="Sage-femme">Sage-femme</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label data-fr="Spécialité" data-ar="التخصص">Spécialité</label>
+          <input type="text" class="form-input" name="specialite">
+        </div>
+        <div class="form-group">
+          <label data-fr="Diplôme" data-ar="الشهادة">Diplôme</label>
+          <input type="text" class="form-input" name="diplome" required>
+        </div>
+        <div class="form-group">
+          <label data-fr="Années d'expérience" data-ar="سنوات الخبرة">Années d'expérience</label>
+          <input type="number" class="form-input" name="annee_experience" required min="0">
+        </div>
+        <div class="form-group">
+          <label data-fr="Établissement" data-ar="المؤسسة">Établissement</label>
+          <input type="text" class="form-input" name="etablissement">
+        </div>
+        <button type="submit" class="btn btn-primary" data-fr="Envoyer la demande" data-ar="إرسال الطلب">Envoyer la demande</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="contact">
+  <div class="container">
+    <h2 class="section-title" data-fr="<span>Contactez</span>-nous" data-ar="<span>اتصل</span> بنا"><span>Contactez</span>-nous</h2>
+    <div class="contact-grid">
+      <div>
+        <div class="contact-info">
+          <h3 style="margin-bottom:20px;color:#2ecc71;" data-fr="Nos coordonnées" data-ar="معلومات الاتصال">Nos coordonnées</h3>
+          <p>&#x1F4CD; <span data-fr="Nouakchott - Mauritanie" data-ar="نواكشوط - موريتانيا">Nouakchott - Mauritanie</span></p>
+          <p>&#x1F4DE; +222 45 25 25 25</p>
+          <p>&#x2709; contact@onps.mr</p>
+          <p>&#x1F552; <span data-fr="Dim - Jeu : 08:00 - 16:00" data-ar="الأحد - الخميس : 08:00 - 16:00">Dim - Jeu : 08:00 - 16:00</span></p>
+        </div>
+      </div>
+      <form class="contact-form" id="contactForm">
+        <div class="form-group">
+          <label data-fr="Nom complet" data-ar="الاسم الكامل">Nom complet</label>
+          <input type="text" class="form-input" name="nom" required>
+        </div>
+        <div class="form-group">
+          <label data-fr="Email" data-ar="البريد الإلكتروني">Email</label>
+          <input type="email" class="form-input" name="email" required>
+        </div>
+        <div class="form-group">
+          <label data-fr="Sujet" data-ar="الموضوع">Sujet</label>
+          <input type="text" class="form-input" name="sujet" required>
+        </div>
+        <div class="form-group">
+          <label data-fr="Message" data-ar="الرسالة">Message</label>
+          <textarea class="form-input" name="message" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" data-fr="Envoyer" data-ar="إرسال">Envoyer</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-links">
+      <a href="#accueil" data-fr="Accueil" data-ar="الرئيسية">Accueil</a>
+      <a href="#apropos" data-fr="À propos" data-ar="عن النقابة">À propos</a>
+      <a href="#annuaire" data-fr="Annuaire" data-ar="الدليل">Annuaire</a>
+      <a href="#inscription" data-fr="Inscription" data-ar="التسجيل">Inscription</a>
+      <a href="#contact" data-fr="Contact" data-ar="اتصل بنا">Contact</a>
+    </div>
+    <p>&copy; 2026 ONPS Mauritanie - Ordre National des Professions de Santé. Tous droits réservés.</p>
+  </div>
+</footer>
+
+<script>
+let lang = 'fr';
+function toggleLang() {
+  lang = lang === 'fr' ? 'ar' : 'fr';
+  const btn = document.querySelector('header button');
+  btn.textContent = '\uD83C\uDF10 ' + (lang === 'fr' ? 'AR' : 'FR');
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  document.querySelectorAll('[data-fr]').forEach(el => {
+    el.innerHTML = lang === 'fr' ? el.dataset.fr : el.dataset.ar;
+  });
+  document.querySelectorAll('[data-fr-ph]').forEach(el => {
+    el.placeholder = lang === 'fr' ? el.dataset.frPh : el.dataset.arPh;
+  });
+}
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast ' + type; t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 4000);
+}
+
+// Annuaire
+async function searchAnnuaire() {
+  const params = new URLSearchParams();
+  const nom = document.getElementById('searchNom').value;
+  const profession = document.getElementById('searchProfession').value;
+  const specialite = document.getElementById('searchSpecialite').value;
+  if (nom) params.set('nom', nom);
+  if (profession) params.set('profession', profession);
+  if (specialite) params.set('specialite', specialite);
+  try {
+    const r = await fetch('/api/annuaire?' + params.toString());
+    const d = await r.json();
+    const tbody = document.getElementById('annuaireBody');
+    tbody.innerHTML = d.membres.length ? d.membres.map(m => `<tr><td>${m.name}</td><td>${m.profession}</td><td>${m.specialite || '-'}</td><td>${m.numero_ordre}</td><td>${m.email}</td><td>${m.telephone}</td></tr>`).join('') : '<tr><td colspan="6" style="text-align:center;color:#5a6a7a;">Aucun professionnel trouvé</td></tr>';
+  } catch(e) { showToast('Erreur chargement annuaire', 'error'); }
+}
+
+// Actualites
+async function loadActualites() {
+  try {
+    const r = await fetch('/api/public/actualites');
+    const d = await r.json();
+    const list = document.getElementById('actualitesList');
+    list.innerHTML = d.actualites.map(a => `<div class="actu-card"><h3>${a.titre_fr}</h3><div class="date">${a.date}</div><p>${a.contenu_fr}</p></div>`).join('');
+    document.getElementById('statActualites').textContent = d.actualites.length;
+  } catch(e) {}
+}
+
+// Inscription
+document.getElementById('inscriptionForm').addEventListener('submit', async (e) => {
+  e.preventDefault(); const fd = new FormData(e.target); const data = Object.fromEntries(fd);
+  try {
+    const r = await fetch('/api/public/inscription', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) });
+    if (!r.ok) throw Error();
+    showToast('Demande envoyée avec succès !', 'success'); e.target.reset();
+  } catch(e) { showToast('Erreur lors de l\'envoi', 'error'); }
+});
+
+// Contact
+document.getElementById('contactForm').addEventListener('submit', async (e) => {
+  e.preventDefault(); const fd = new FormData(e.target); const data = Object.fromEntries(fd);
+  try {
+    const r = await fetch('/api/public/contact', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) });
+    if (!r.ok) throw Error();
+    showToast('Message envoyé avec succès !', 'success'); e.target.reset();
+  } catch(e) { showToast('Erreur lors de l\'envoi', 'error'); }
+});
+
+searchAnnuaire();
+loadActualites();
+</script>
+</body>
+</html>

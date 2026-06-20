@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Espace Membre - ONPS Mauritanie</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="toast" class="toast"></div>
+<div class="dashboard">
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo">
+        <div class="logo-icon">&#x2695;</div>
+        <div class="logo-text">ONPS <span>Membre</span></div>
+      </div>
+    </div>
+    <nav>
+      <a href="#" onclick="showTab('profil')" class="active" data-tab="profil">&#x1F464; Mon Profil</a>
+      <a href="#" onclick="showTab('actualites')" data-tab="actualites">&#x1F4F0; Actualités</a>
+      <a href="#" onclick="showTab('annuaire')" data-tab="annuaire">&#x1F4CB; Annuaire</a>
+    </nav>
+    <div style="padding:20px;border-top:1px solid #2a3a4a;">
+      <p style="font-size:12px;color:#5a6a7a;margin-bottom:10px;" id="userInfo"></p>
+      <button onclick="logout()" class="btn btn-danger btn-sm" style="width:100%;">Déconnexion</button>
+    </div>
+  </div>
+  <div class="main-content" id="mainContent"></div>
+</div>
+
+<script>
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast ' + type; t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 4000);
+}
+
+async function checkAuth() {
+  try {
+    const r = await fetch('/api/me');
+    if (!r.ok) { window.location.href = '/login.html'; return null; }
+    const d = await r.json();
+    if (d.user.role === 'admin') { window.location.href = '/admin.html'; return null; }
+    document.getElementById('userInfo').textContent = d.user.name + ' (Membre)';
+    return d.user;
+  } catch(e) { window.location.href = '/login.html'; return null; }
+}
+
+async function logout() {
+  await fetch('/api/logout', { method:'POST' });
+  window.location.href = '/login.html';
+}
+
+function showTab(name) {
+  document.querySelectorAll('.sidebar nav a').forEach(a => a.classList.remove('active'));
+  document.querySelector(`[data-tab="${name}"]`).classList.add('active');
+  switch(name) {
+    case 'profil': loadProfil(); break;
+    case 'actualites': loadActualites(); break;
+    case 'annuaire': loadAnnuaire(); break;
+  }
+}
+
+async function loadProfil() {
+  const mc = document.getElementById('mainContent');
+  mc.innerHTML = '<h2>Mon Profil</h2><div id="profilInfo"></div>';
+  try {
+    const r = await fetch('/api/member/data');
+    const d = await r.json();
+    const m = d.membre;
+    document.getElementById('profilInfo').innerHTML = `
+      <div style="background:#1a2a3a;border-radius:12px;padding:30px;border:1px solid #2a3a4a;margin-top:20px;max-width:600px;">
+        <div style="text-align:center;margin-bottom:25px;">
+          <div style="width:80px;height:80px;background:#2ecc71;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 15px;font-size:36px;color:#0f1923;font-weight:bold;">${m.name.charAt(0)}</div>
+          <h3>${m.name}</h3>
+          <p style="color:#a0b4c8;">${m.profession || 'Professionnel de santé'} <span class="badge ${m.statut==='valide'?'badge-success':'badge-warning'}">${m.statut}</span></p>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+          <div><strong style="color:#2ecc71;font-size:13px;display:block;margin-bottom:3px;">Profession</strong><span>${m.profession||'-'}</span></div>
+          <div><strong style="color:#2ecc71;font-size:13px;display:block;margin-bottom:3px;">Spécialité</strong><span>${m.specialite||'-'}</span></div>
+          <div><strong style="color:#2ecc71;font-size:13px;display:block;margin-bottom:3px;">N° Ordre</strong><span>${m.numero_ordre||'-'}</span></div>
+          <div><strong style="color:#2ecc71;font-size:13px;display:block;margin-bottom:3px;">Email</strong><span>${m.email||'-'}</span></div>
+          <div><strong style="color:#2ecc71;font-size:13px;display:block;margin-bottom:3px;">Téléphone</strong><span>${m.phone||'-'}</span></div>
+        </div>
+      </div>`;
+  } catch(e) { showToast('Erreur chargement profil', 'error'); }
+}
+
+async function loadActualites() {
+  const mc = document.getElementById('mainContent');
+  mc.innerHTML = '<h2>Actualités</h2><div id="actualitesList" style="margin-top:20px;"></div>';
+  try {
+    const r = await fetch('/api/public/actualites');
+    const d = await r.json();
+    document.getElementById('actualitesList').innerHTML = d.actualites.map(a => `
+      <div class="actu-card"><h3>${a.titre_fr}</h3><div class="date">${a.date}</div><p>${a.contenu_fr}</p></div>
+    `).join('') || '<p style="color:#5a6a7a;">Aucune actualité</p>';
+  } catch(e) {}
+}
+
+async function loadAnnuaire() {
+  const mc = document.getElementById('mainContent');
+  mc.innerHTML = '<h2>Annuaire des professionnels</h2><div style="margin-top:20px;overflow-x:auto;"><table><thead><tr><th>Nom</th><th>Profession</th><th>Spécialité</th><th>N° Ordre</th><th>Email</th><th>Téléphone</th></tr></thead><tbody id="annuaireBody"></tbody></table></div>';
+  try {
+    const r = await fetch('/api/annuaire');
+    const d = await r.json();
+    document.getElementById('annuaireBody').innerHTML = d.membres.map(m => `<tr><td>${m.name}</td><td>${m.profession}</td><td>${m.specialite||'-'}</td><td>${m.numero_ordre}</td><td>${m.email}</td><td>${m.telephone}</td></tr>`).join('');
+  } catch(e) {}
+}
+
+checkAuth().then(user => { if (user) loadProfil(); });
+</script>
+</body>
+</html>

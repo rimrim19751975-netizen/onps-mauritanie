@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connexion - ONPS Mauritanie</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="toast" class="toast"></div>
+<div class="login-page">
+  <div class="login-box">
+    <div class="logo" style="justify-content:center;margin-bottom:20px;">
+      <div class="logo-icon">&#x2695;</div>
+      <div class="logo-text">ONPS <span>Mauritanie</span></div>
+    </div>
+    <h1 data-fr="Connexion" data-ar="تسجيل الدخول">Connexion</h1>
+    <p data-fr="Accédez à votre espace membre" data-ar="الوصول إلى مساحة العضو الخاصة بك">Accédez à votre espace membre</p>
+    <form class="login-form" id="loginForm">
+      <input type="text" class="form-input" name="username" placeholder="Nom d'utilisateur" required>
+      <input type="password" class="form-input" name="password" placeholder="Mot de passe" required>
+      <button type="submit" class="btn btn-primary" style="width:100%;" data-fr="Se connecter" data-ar="تسجيل الدخول">Se connecter</button>
+    </form>
+    <p style="margin-top:15px;text-align:center;font-size:13px;color:#5a6a7a;">
+      <span data-fr="Mot de passe oublié ?" data-ar="هل نسيت كلمة المرور؟">Mot de passe oublié ?</span>
+      <span style="margin:0 10px">|</span>
+      <a href="/" data-fr="Retour au site" data-ar="العودة إلى الموقع">Retour au site</a>
+    </p>
+  </div>
+</div>
+<script>
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast ' + type; t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 4000);
+}
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const data = Object.fromEntries(fd);
+  try {
+    const r = await fetch('/api/login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) });
+    const d = await r.json();
+    if (!r.ok) { showToast(d.error || 'Erreur de connexion', 'error'); return; }
+    if (d.user.role === 'admin') window.location.href = '/admin.html';
+    else window.location.href = '/membre.html';
+  } catch(e) { showToast('Erreur de connexion', 'error'); }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "users": [
+    { "id": 1, "username": "admin", "password": "admin123", "role": "admin", "name": "Secrétaire Général ONPS", "email": "sg@onps.mr", "phone": "+222 45 00 00 01" },
+    { "id": 2, "username": "medecin", "password": "user", "role": "member", "name": "Dr. Ahmed Ould Mohamed", "email": "ahmed@example.mr", "phone": "+222 46 00 00 01", "profession": "Médecin", "specialite": "Cardiologie", "numero_ordre": "ONPS-MR-2024-001", "statut": "valide" },
+    { "id": 3, "username": "pharmacien", "password": "user", "role": "member", "name": "Fatimata Mint Sidi", "email": "fatimata@example.mr", "phone": "+222 47 00 00 02", "profession": "Pharmacien", "specialite": "Pharmacie clinique", "numero_ordre": "ONPS-MR-2024-002", "statut": "valide" },
+    { "id": 4, "username": "infirmier", "password": "user", "role": "member", "name": "Mohamed Vall Ould Cheikh", "email": "mvall@example.mr", "phone": "+222 46 00 00 03", "profession": "Infirmier", "specialite": "Soins généraux", "numero_ordre": "ONPS-MR-2024-003", "statut": "en_attente" },
+    { "id": 5, "username": "dentiste", "password": "user", "role": "member", "name": "Dr. Aïcha Mint Ahmed", "email": "aicha@example.mr", "phone": "+222 47 00 00 04", "profession": "Chirurgien-dentiste", "specialite": "Odontologie", "numero_ordre": "ONPS-MR-2024-004", "statut": "valide" }
+  ],
+  "actualites": [
+    { "id": 1, "titre_fr": "Assemblée Générale Annuelle 2026", "titre_ar": "الجمعية العامة السنوية 2026", "contenu_fr": "L'Ordre National des Professions de Santé de Mauritanie tiendra son Assemblée Générale Annuelle le 15 juillet 2026 à Nouakchott. Tous les membres sont invités à participer.", "contenu_ar": "سيعقد المجلس الوطني للمهن الصحية في موريتانيا جمعيته العامة السنوية في 15 يوليو 2026 في نواكشوط. جميع الأعضاء مدعوون للمشاركة.", "date": "2026-06-15", "statut": "publie", "createdBy": 1, "createdAt": "2026-06-10T08:00:00.000Z" },
+    { "id": 2, "titre_fr": "Nouveau code de déontologie médicale", "titre_ar": "مدونة جديدة لأخلاقيات المهنة الطبية", "contenu_fr": "Le nouveau code de déontologie médicale a été adopté par le conseil de l'ordre. Il entrera en vigueur le 1er septembre 2026.", "contenu_ar": "تم اعتماد مدونة الأخلاقيات الطبية الجديدة من قبل مجلس النقابة. ستدخل حيز التنفيذ في 1 سبتمبر 2026.", "date": "2026-06-01", "statut": "publie", "createdBy": 1, "createdAt": "2026-06-01T08:00:00.000Z" },
+    { "id": 3, "titre_fr": "Campagne de vaccination nationale", "titre_ar": "حملة التطعيم الوطنية", "contenu_fr": "L'ONPS appelle tous les professionnels de santé à participer à la campagne nationale de vaccination contre la fièvre jaune.", "contenu_ar": "يدعو المجلس الوطني للمهن الصحية جميع المهنيين الصحيين للمشاركة في الحملة الوطنية للتطعيم ضد الحمى الصفراء.", "date": "2026-05-20", "statut": "publie", "createdBy": 1, "createdAt": "2026-05-20T08:00:00.000Z" }
+  ],
+  "inscriptions": [
+    { "id": 1, "nom": "Dr. Sidi Ould Mohamed", "email": "sidi@example.mr", "telephone": "+222 46 00 00 10", "profession": "Médecin", "specialite": "Pédiatrie", "diplome": "Doctorat en médecine - Université de Nouakchott", "annee_experience": 8, "etablissement": "Hôpital National de Nouakchott", "statut": "en_attente", "createdAt": "2026-06-18T10:00:00.000Z" }
+  ],
+  "messages": [
+    { "id": 1, "nom": "Jean Dupont", "email": "jean@example.com", "sujet": "Demande d'information", "message": "Bonjour, je souhaiterais connaître les modalités d'inscription à l'ordre pour un médecin étranger souhaitant exercer en Mauritanie.", "lu": false, "createdAt": "2026-06-19T08:00:00.000Z" }
+  ]
+}
